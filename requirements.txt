@@ -1,3 +1,5 @@
 networkx
 pyvis
 jinja2
+matplotlib
+pip-tools

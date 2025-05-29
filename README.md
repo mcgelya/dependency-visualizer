@@ -11,11 +11,6 @@ python -m venv .venv
 source .venv/bin/activate
 ```
 
-First install `pip-tools`:
-```bash
-pip install pip-tools
-```
-
 Then install `fastapi`:
 ```bash
 pip install "fastapi[standard]"
