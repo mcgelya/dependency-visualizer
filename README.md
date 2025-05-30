@@ -2,7 +2,7 @@
 
 Clone this repository using:
 ```bash
-git clone https://github.com/mcgelya/dependency-graph
+git clone https://github.com/mcgelya/dependency-visualizer
 ```
 
 Activate `venv`:

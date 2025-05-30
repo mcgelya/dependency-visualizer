@@ -31,8 +31,8 @@ class DependencyCompiler:
                     repository=self.repo,
                     existing_constraints={},
                 )
-
                 resolved = resolver.resolve()
+
             except DistributionNotFound as e:
                 cause_exc = e.__cause__
                 if cause_exc is None:
