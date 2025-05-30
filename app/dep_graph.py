@@ -3,6 +3,8 @@ from pip._internal.req import InstallRequirement
 from piptools.utils import install_req_from_line
 from piptools.repositories import PyPIRepository
 from piptools.resolver import BacktrackingResolver
+from pip._vendor.resolvelib.resolvers import ResolutionImpossible
+from pip._internal.exceptions import DistributionNotFound
 import networkx as nx
 import warnings
 
@@ -23,14 +25,22 @@ class DependencyCompiler:
             warnings.simplefilter("ignore")
 
             constraints = _parse_requirements(requirements)
+            try:
+                resolver = BacktrackingResolver(
+                    constraints=constraints,
+                    repository=self.repo,
+                    existing_constraints={},
+                )
 
-            resolver = BacktrackingResolver(
-                constraints=constraints,
-                repository=self.repo,
-                existing_constraints={},
-            )
-
-            resolved = resolver.resolve()
+                resolved = resolver.resolve()
+            except DistributionNotFound as e:
+                cause_exc = e.__cause__
+                if cause_exc is None:
+                    raise e
+                if not isinstance(cause_exc, ResolutionImpossible):
+                    raise e
+                err = "Cannot satisfy requirements: " + ", ".join(str(cause.requirement) for cause in cause_exc.causes)
+                raise ValueError(err)
 
             dep_graph = nx.DiGraph()
 
